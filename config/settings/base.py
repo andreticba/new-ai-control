@@ -171,3 +171,6 @@ LOGGING = {
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+# Usuário de serviço do bot (usado na migration de seed e no orquestrador)
+BOT_USER_USERNAME = os.environ.get('BOT_USER_USERNAME', 'ai-bot')

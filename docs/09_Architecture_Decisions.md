@@ -9,4 +9,4 @@ Este arquivo sumariza os registros históricos de decisões arquiteturais do pro
 | **ADR-002** | 05/10/2026 | Transição para Plataforma Agnóstica (Remoção do escopo Saúde). | Foco absoluto no core value: Privacidade, Data Vault e Ingestão AI, permitindo expansão comercial para além de verticais clínicas. | ✅ Aprovada |
 | **ADR-003** | 05/10/2026 | Exportação de ERD em formato `.dot`. | Contornar dependências C++ complexas do SO (`graphviz`), facilitando integrações CI/CD e diffs textuais no Git. | ✅ Aprovada |
 | **ADR-004** | 05/10/2026 | Adoção do `drf-spectacular` com `@extend_schema`. | Compatibilização moderna de OpenAPI 3.0 para o Django, com manipulação explícita de endpoints genéricos (`APIView`). | ✅ Aprovada |
-
+| **ADR-005** | 07/10/2026 | Arquitetura RBAC Hierárquica 4-Tier e RAG Scoping acoplado. | Suportar modelagens multi-contexto (Projetos acadêmicos / corporativos e Squads), exigindo restrição P3 de vínculos e amarrando `DocumentChunk` HNSW (768d) aos escopos de visibilidade, protegendo o banco vetorial e simplificando queries (migration squash único). | ✅ Aprovada |

@@ -10,7 +10,7 @@ A arquitetura interna do backend está contida primariamente na pasta `core/` e 
 
 ## Nível 2: Módulos do Core
 1. **`core.api.v1.views`**: Controladores de entrada. Destaca-se o `webhook_whatsapp.py`, que valida os cabeçalhos de segurança (API Keys) antes de admitir qualquer dado.
-2. **`core.models`**: O coração do Data Vault. Define tabelas vetoriais (`pgvector`) e tabelas criptografadas.
+2. **`core.models`**: O coração do Data Vault. Define tabelas vetoriais (`pgvector` com HnswIndex em 768 dimensões) e tabelas criptografadas. Destaca-se a modelagem do **RBAC Hierárquico 4-Tier** (`Organization` -> `Department` -> `Project` -> `Squad`) acoplado ao modelo de visibilidade do RAG (`Document`).
 3. **`core.tasks`**: Workers Assíncronos. Ex: `process_whatsapp_webhook_task`, que consome os dados e aplica a separação de *Tenant*.
 
 ## Padrões de Projeto Utilizados
