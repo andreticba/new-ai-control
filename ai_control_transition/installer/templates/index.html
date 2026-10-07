@@ -1,0 +1,118 @@
+<!-- installer/templates/index.html | Vitalia SDD v0.6.0 | 06-10-2026 16:05(GMT-04:00) -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Control Installer</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; background: #1e293b; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        h1 { color: #38bdf8; margin-top: 0; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: #94a3b8; }
+        input[type="text"] { width: 100%; padding: 0.75rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #f8fafc; box-sizing: border-box; }
+        button { background: #38bdf8; color: #0f172a; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #0ea5e9; }
+        .log-box { background: #000; color: #00ff00; font-family: monospace; padding: 1rem; border-radius: 4px; height: 300px; overflow-y: auto; margin-top: 1rem; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Setup AI Control</h1>
+        <p>Revise as variáveis de ambiente. Chaves seguras foram autogeradas quando ausentes.</p>
+        
+        <form id="configForm">
+            <div id="envFields">
+                <!-- Injetado pelo JS -->
+            </div>
+            <button type="submit" id="saveBtn">Salvar e Instalar</button>
+        </form>
+
+        <div id="logBox" class="log-box"></div>
+        <div id="finalCommands" style="display:none; margin-top:1rem; padding:1rem; background:#064e3b; border-radius:4px;">
+            <h3>✅ Instalação Concluída!</h3>
+            <p>A orquestração foi finalizada. A infraestrutura base (Bancos, Redis, Ollama, Evolution API) já está rodando via Docker. Para iniciar os serviços locais do AI Control, abra <strong>dois terminais</strong> e execute:</p>
+            <div style="background: #0f172a; padding: 1rem; border-radius: 4px; border: 1px solid #334155; margin-top: 1rem;">
+                <h4 style="margin-top:0; color:#38bdf8;">🖥️ Terminal 1 (Servidor Principal):</h4>
+                <code style="display: block; color: #a78bfa; margin-bottom: 0.5rem;"># 1. Entre no diretório e ative o ambiente:</code>
+                <code style="display: block; color: #f8fafc; margin-bottom: 1rem;">cd ~/projetos/assistidos/ai-control<br>source .venv/bin/activate</code>
+                
+                <code style="display: block; color: #a78bfa; margin-bottom: 0.5rem;"># 2. Ative o kit no projeto (se necessário):</code>
+                <code style="display: block; color: #f8fafc; margin-bottom: 1rem;">bash ~/.vitalia/bin/install-project</code>
+                
+                <code style="display: block; color: #a78bfa; margin-bottom: 0.5rem;"># 3. (Opcional) Crie um usuário administrador para o painel:</code>
+                <code style="display: block; color: #f8fafc; margin-bottom: 1rem;">python manage.py createsuperuser</code>
+                
+                <code style="display: block; color: #a78bfa; margin-bottom: 0.5rem;"># 4. Inicie o Django:</code>
+                <code style="display: block; color: #f8fafc; margin-bottom: 1rem;">python manage.py runserver 0.0.0.0:8000</code>
+
+                <h4 style="color:#38bdf8; margin-bottom:0.5rem;">⚙️ Terminal 2 (Tarefas em Background):</h4>
+                <code style="display: block; color: #a78bfa; margin-bottom: 0.5rem;"># Inicie o worker do Celery para processar integrações pesadas:</code>
+                <code style="display: block; color: #f8fafc;">cd ~/projetos/assistidos/ai-control<br>source .venv/bin/activate<br>celery -A config worker -l INFO</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const envData = {{env_json|safe}};
+        const token = '{{token}}';
+        const fieldsContainer = document.getElementById('envFields');
+        
+        for (const [key, value] of Object.entries(envData)) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            
+            const label = document.createElement('label');
+            label.textContent = key;
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = key;
+            input.value = value || '';
+            
+            div.appendChild(label);
+            div.appendChild(input);
+            fieldsContainer.appendChild(div);
+        }
+
+        document.getElementById('configForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Salvar Configurações
+            const saveResponse = await fetch(`/save?token=${token}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            if (saveResponse.ok) {
+                // Iniciar Orquestração
+                await fetch(`/install?token=${token}`, { method: 'POST' });
+                
+                document.getElementById('configForm').style.display = 'none';
+                document.getElementById('logBox').style.display = 'block';
+                startLogStream();
+            } else {
+                alert("Erro ao salvar configurações.");
+            }
+        });
+
+        function startLogStream() {
+            const evtSource = new EventSource(`/stream?token=${token}`);
+            const logBox = document.getElementById('logBox');
+            evtSource.onmessage = function(event) {
+                if (event.data === "INSTALLATION_COMPLETE") {
+                    evtSource.close();
+                    document.getElementById('finalCommands').style.display = 'block';
+                    logBox.innerHTML += "<br>> Processo finalizado com sucesso.<br>";
+                } else {
+                    logBox.innerHTML += event.data + "<br>";
+                    logBox.scrollTop = logBox.scrollHeight;
+                }
+            };
+        }
+    </script>
+</body>
+</html>

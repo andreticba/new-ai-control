@@ -1,0 +1,141 @@
+=> Iniciando orquestração profunda do AI Control...
+=> [1/4] Configurando ambiente virtual Python global...
+   Diretório .venv já existe, reutilizando...
+   Atualizando pip...
+   Instalando dependências do projeto (requirements.txt)...
+Requirement already satisfied: Django==6.1.* in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 3)) (6.1.2)
+Requirement already satisfied: daphne==4.2.3 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 4)) (4.2.3)
+Requirement already satisfied: celery==5.6.3 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 5)) (5.6.3)
+Requirement already satisfied: redis>=5.0 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 6)) (8.1.0)
+Requirement already satisfied: psycopg2-binary in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 7)) (2.9.13)
+Requirement already satisfied: pgvector==0.5.0 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 8)) (0.5.0)
+Requirement already satisfied: django-crypto-fields==1.0.1 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 9)) (1.0.1)
+Requirement already satisfied: edc-constants==1.0.1 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 10)) (1.0.1)
+Requirement already satisfied: tqdm>=4.66.0 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 11)) (4.70.1)
+Requirement already satisfied: cryptography in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 12)) (50.0.2)
+Requirement already satisfied: pydantic>=2.0 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 13)) (2.13.5)
+Requirement already satisfied: pytest-django in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 14)) (4.14.0)
+Requirement already satisfied: pytest-cov in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 15)) (7.1.0)
+Requirement already satisfied: python-dotenv in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 16)) (1.2.4)
+Requirement already satisfied: dj-database-url in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 17)) (3.1.2)
+Requirement already satisfied: requests in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 18)) (2.34.2)
+Requirement already satisfied: channels<5,>=4 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 19)) (4.3.2)
+Requirement already satisfied: channels-redis<5,>=4 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 20)) (4.3.0)
+Requirement already satisfied: drf-spectacular==0.30.0 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 21)) (0.30.0)
+Requirement already satisfied: django-extensions==4.1 in ./.venv/lib/python3.14/site-packages (from -r requirements.txt (line 22)) (4.1)
+Requirement already satisfied: asgiref<4,>=3.5.2 in ./.venv/lib/python3.14/site-packages (from daphne==4.2.3->-r requirements.txt (line 4)) (3.12.1)
+Requirement already satisfied: autobahn>=22.4.2 in ./.venv/lib/python3.14/site-packages (from daphne==4.2.3->-r requirements.txt (line 4)) (26.7.1)
+Requirement already satisfied: twisted>=22.4 in ./.venv/lib/python3.14/site-packages (from twisted[tls]>=22.4->daphne==4.2.3->-r requirements.txt (line 4)) (26.4.0)
+Requirement already satisfied: billiard<5.0,>=4.2.1 in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (4.3.1)
+Requirement already satisfied: kombu>=5.6.0 in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (5.6.2)
+Requirement already satisfied: vine<6.0,>=5.1.0 in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (5.1.0)
+Requirement already satisfied: click<9.0,>=8.1.2 in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (8.5.0)
+Requirement already satisfied: click-didyoumean>=0.3.0 in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (0.3.1)
+Requirement already satisfied: click-repl>=0.2.0 in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (0.4.1)
+Requirement already satisfied: click-plugins>=1.1.1 in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (1.1.1.2)
+Requirement already satisfied: python-dateutil>=2.8.2 in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (2.9.0.post0)
+Requirement already satisfied: tzlocal in ./.venv/lib/python3.14/site-packages (from celery==5.6.3->-r requirements.txt (line 5)) (5.4.4)
+Requirement already satisfied: pycryptodomex in ./.venv/lib/python3.14/site-packages (from django-crypto-fields==1.0.1->-r requirements.txt (line 9)) (3.24.0)
+Requirement already satisfied: django-audit-fields in ./.venv/lib/python3.14/site-packages (from django-crypto-fields==1.0.1->-r requirements.txt (line 9)) (2.0.6)
+Requirement already satisfied: edc-utils in ./.venv/lib/python3.14/site-packages (from django-crypto-fields==1.0.1->-r requirements.txt (line 9)) (1.1.1)
+Requirement already satisfied: edc-model-fields in ./.venv/lib/python3.14/site-packages (from django-crypto-fields==1.0.1->-r requirements.txt (line 9)) (1.0.0)
+Requirement already satisfied: django-revision in ./.venv/lib/python3.14/site-packages (from django-crypto-fields==1.0.1->-r requirements.txt (line 9)) (2.1.1)
+Requirement already satisfied: djangorestframework>=3.10.3 in ./.venv/lib/python3.14/site-packages (from drf-spectacular==0.30.0->-r requirements.txt (line 21)) (3.18.3)
+Requirement already satisfied: uritemplate>=2.0.0 in ./.venv/lib/python3.14/site-packages (from drf-spectacular==0.30.0->-r requirements.txt (line 21)) (4.2.0)
+Requirement already satisfied: PyYAML>=5.1 in ./.venv/lib/python3.14/site-packages (from drf-spectacular==0.30.0->-r requirements.txt (line 21)) (6.0.3)
+Requirement already satisfied: jsonschema>=2.6.0 in ./.venv/lib/python3.14/site-packages (from drf-spectacular==0.30.0->-r requirements.txt (line 21)) (4.26.0)
+Requirement already satisfied: inflection>=0.3.1 in ./.venv/lib/python3.14/site-packages (from drf-spectacular==0.30.0->-r requirements.txt (line 21)) (0.5.1)
+Requirement already satisfied: sqlparse>=0.5.0 in ./.venv/lib/python3.14/site-packages (from Django==6.1.*->-r requirements.txt (line 3)) (0.6.0)
+Requirement already satisfied: msgpack~=1.0 in ./.venv/lib/python3.14/site-packages (from channels-redis<5,>=4->-r requirements.txt (line 20)) (1.2.3)
+Requirement already satisfied: cffi>=2.0.0 in ./.venv/lib/python3.14/site-packages (from cryptography->-r requirements.txt (line 12)) (2.1.1)
+Requirement already satisfied: annotated-types>=0.6.0 in ./.venv/lib/python3.14/site-packages (from pydantic>=2.0->-r requirements.txt (line 13)) (0.8.0)
+Requirement already satisfied: pydantic-core==2.46.5 in ./.venv/lib/python3.14/site-packages (from pydantic>=2.0->-r requirements.txt (line 13)) (2.46.5)
+Requirement already satisfied: typing-extensions>=4.14.1 in ./.venv/lib/python3.14/site-packages (from pydantic>=2.0->-r requirements.txt (line 13)) (4.16.0)
+Requirement already satisfied: typing-inspection>=0.4.2 in ./.venv/lib/python3.14/site-packages (from pydantic>=2.0->-r requirements.txt (line 13)) (0.4.4)
+Requirement already satisfied: pytest>=7.0.0 in ./.venv/lib/python3.14/site-packages (from pytest-django->-r requirements.txt (line 14)) (9.1.1)
+Requirement already satisfied: coverage>=7.10.6 in ./.venv/lib/python3.14/site-packages (from coverage[toml]>=7.10.6->pytest-cov->-r requirements.txt (line 15)) (7.16.2)
+Requirement already satisfied: pluggy>=1.2 in ./.venv/lib/python3.14/site-packages (from pytest-cov->-r requirements.txt (line 15)) (1.6.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.14/site-packages (from requests->-r requirements.txt (line 18)) (3.5.2)
+Requirement already satisfied: idna<4,>=2.5 in ./.venv/lib/python3.14/site-packages (from requests->-r requirements.txt (line 18)) (3.20)
+Requirement already satisfied: urllib3<3,>=1.26 in ./.venv/lib/python3.14/site-packages (from requests->-r requirements.txt (line 18)) (2.8.0)
+Requirement already satisfied: certifi>=2023.5.7 in ./.venv/lib/python3.14/site-packages (from requests->-r requirements.txt (line 18)) (2026.7.22)
+Requirement already satisfied: cbor2>=5.2.0 in ./.venv/lib/python3.14/site-packages (from autobahn>=22.4.2->daphne==4.2.3->-r requirements.txt (line 4)) (6.1.5)
+Requirement already satisfied: hyperlink>=21.0.0 in ./.venv/lib/python3.14/site-packages (from autobahn>=22.4.2->daphne==4.2.3->-r requirements.txt (line 4)) (21.0.0)
+Requirement already satisfied: txaio>=25.12.2 in ./.venv/lib/python3.14/site-packages (from autobahn>=22.4.2->daphne==4.2.3->-r requirements.txt (line 4)) (26.6.1)
+Requirement already satisfied: ujson>=4.0.2 in ./.venv/lib/python3.14/site-packages (from autobahn>=22.4.2->daphne==4.2.3->-r requirements.txt (line 4)) (6.0.0)
+Requirement already satisfied: pycparser in ./.venv/lib/python3.14/site-packages (from cffi>=2.0.0->cryptography->-r requirements.txt (line 12)) (3.0)
+Requirement already satisfied: prompt_toolkit>=3.0.36 in ./.venv/lib/python3.14/site-packages (from click-repl>=0.2.0->celery==5.6.3->-r requirements.txt (line 5)) (3.0.53)
+Requirement already satisfied: attrs>=22.2.0 in ./.venv/lib/python3.14/site-packages (from jsonschema>=2.6.0->drf-spectacular==0.30.0->-r requirements.txt (line 21)) (26.1.0)
+Requirement already satisfied: jsonschema-specifications>=2023.03.6 in ./.venv/lib/python3.14/site-packages (from jsonschema>=2.6.0->drf-spectacular==0.30.0->-r requirements.txt (line 21)) (2025.9.1)
+Requirement already satisfied: referencing>=0.28.4 in ./.venv/lib/python3.14/site-packages (from jsonschema>=2.6.0->drf-spectacular==0.30.0->-r requirements.txt (line 21)) (0.37.0)
+Requirement already satisfied: rpds-py>=0.25.0 in ./.venv/lib/python3.14/site-packages (from jsonschema>=2.6.0->drf-spectacular==0.30.0->-r requirements.txt (line 21)) (2026.9.1)
+Requirement already satisfied: amqp<6.0.0,>=5.1.1 in ./.venv/lib/python3.14/site-packages (from kombu>=5.6.0->celery==5.6.3->-r requirements.txt (line 5)) (5.4.1)
+Requirement already satisfied: tzdata>=2025.2 in ./.venv/lib/python3.14/site-packages (from kombu>=5.6.0->celery==5.6.3->-r requirements.txt (line 5)) (2026.5)
+Requirement already satisfied: packaging in ./.venv/lib/python3.14/site-packages (from kombu>=5.6.0->celery==5.6.3->-r requirements.txt (line 5)) (26.3)
+Requirement already satisfied: wcwidth>=0.1.4 in ./.venv/lib/python3.14/site-packages (from prompt_toolkit>=3.0.36->click-repl>=0.2.0->celery==5.6.3->-r requirements.txt (line 5)) (0.9.2)
+Requirement already satisfied: iniconfig>=1.0.1 in ./.venv/lib/python3.14/site-packages (from pytest>=7.0.0->pytest-django->-r requirements.txt (line 14)) (2.3.0)
+Requirement already satisfied: pygments>=2.7.2 in ./.venv/lib/python3.14/site-packages (from pytest>=7.0.0->pytest-django->-r requirements.txt (line 14)) (2.21.0)
+Requirement already satisfied: six>=1.5 in ./.venv/lib/python3.14/site-packages (from python-dateutil>=2.8.2->celery==5.6.3->-r requirements.txt (line 5)) (1.17.0)
+Requirement already satisfied: automat>=24.8.0 in ./.venv/lib/python3.14/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne==4.2.3->-r requirements.txt (line 4)) (25.4.16)
+Requirement already satisfied: constantly>=15.1 in ./.venv/lib/python3.14/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne==4.2.3->-r requirements.txt (line 4)) (23.10.4)
+Requirement already satisfied: incremental>=24.7.0 in ./.venv/lib/python3.14/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne==4.2.3->-r requirements.txt (line 4)) (24.11.0)
+Requirement already satisfied: zope-interface>=5 in ./.venv/lib/python3.14/site-packages (from twisted>=22.4->twisted[tls]>=22.4->daphne==4.2.3->-r requirements.txt (line 4)) (8.6)
+Requirement already satisfied: pyopenssl>=25.2.0 in ./.venv/lib/python3.14/site-packages (from twisted[tls]>=22.4->daphne==4.2.3->-r requirements.txt (line 4)) (26.4.0)
+Requirement already satisfied: service-identity>=18.1.0 in ./.venv/lib/python3.14/site-packages (from twisted[tls]>=22.4->daphne==4.2.3->-r requirements.txt (line 4)) (26.1.0)
+Requirement already satisfied: gitpython>=3.1.57 in ./.venv/lib/python3.14/site-packages (from django-revision->django-crypto-fields==1.0.1->-r requirements.txt (line 9)) (3.2.0)
+Requirement already satisfied: gitdb<5,>=4.0.1 in ./.venv/lib/python3.14/site-packages (from gitpython>=3.1.57->django-revision->django-crypto-fields==1.0.1->-r requirements.txt (line 9)) (4.0.12)
+Requirement already satisfied: smmap<6,>=3.0.1 in ./.venv/lib/python3.14/site-packages (from gitdb<5,>=4.0.1->gitpython>=3.1.57->django-revision->django-crypto-fields==1.0.1->-r requirements.txt (line 9)) (5.0.3)
+=> [2/4] Instalando e injetando o Vitalia SDD Kit...
+   [Aviso] Instalador do SDD Kit não encontrado em ~/.vitalia/src/install-project.sh.
+   Pulando injeção do kit (ele pode já estar instalado no projeto).
+=> [3/4] Subindo containers da infraestrutura via Docker Compose...
+ Container ai-control_redis Creating 
+ Container ai-control_evolution_api Creating 
+ Container ai-control_db Creating 
+ Container ai-control_ollama Creating 
+ Container ai-control_ollama Created 
+ Container ai-control_evolution_api Created 
+ Container ai-control_db Created 
+ Container ai-control_open_webui Creating 
+ Container ai-control_redis Created 
+ Container ai-control_open_webui Created 
+ Container ai-control_db Starting 
+ Container ai-control_redis Starting 
+ Container ai-control_ollama Starting 
+ Container ai-control_evolution_api Starting 
+ Container ai-control_db Started 
+ Container ai-control_redis Started 
+ Container ai-control_ollama Started 
+ Container ai-control_open_webui Starting 
+ Container ai-control_evolution_api Started 
+ Container ai-control_open_webui Started 
+   Aguardando 10 segundos para a inicialização dos bancos de dados...
+=> [4/4] Aplicando migrações do banco de dados (Django)...
+   Tentando executar migrações no serviço 'web' via Docker...
+service "web" is not running
+   [Aviso] Falha ao rodar migrate no serviço 'web'. Container não encontrado ou indisponível.
+   Executando migrações localmente (fallback)...
+[2026-10-06 19:19:38,583] INFO core.apps Patch django_audit_fields (utcnow) aplicado com sucesso.
+[2026-10-06 19:19:38,583] INFO core.apps Patch Psycopg2 (Safe Bytes Cast) aplicado com sucesso.
+Loading encryption keys
+ * Loading encryption keys from crypto_keys
+  - loading rsa.restricted.public ...   - loading rsa.restricted.public ... Done.
+  - loading rsa.restricted.private ...   - loading rsa.restricted.private ... Done.
+  - loading rsa.local.public ...   - loading rsa.local.public ... Done.
+  - loading rsa.local.private ...   - loading rsa.local.private ... Done.
+   - loading aes.local ...   - loading aes.local ... Done.
+   - loading aes.restricted ...   - loading aes.restricted ... Done.
+   - loading salt.local ...   - loading salt.local ... Done.
+   - loading salt.restricted ...   - loading salt.restricted ... Done.
+ Done loading encryption keys
+Loading django-crypto-fields ...
+ * Keys are in folder crypto_keys
+ * Remember to make folder READ-ONLY in production
+ * Remember to keep a backup of your encryption keys
+ Done loading django-crypto-fields.
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, core, django_crypto_fields, sessions
+Running migrations:
+  No migrations to apply.
+============================================================
+=> Instalação concluída com sucesso!

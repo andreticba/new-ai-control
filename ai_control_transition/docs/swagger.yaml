@@ -1,0 +1,35 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/v1/webhook/whatsapp/.:
+    post:
+      operationId: api_v1_webhook_whatsapp_._create
+      description: Recebe eventos de webhook da API do WhatsApp via SaaS Gateway.
+      summary: WhatsApp Webhook Receiver
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: {}
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              additionalProperties: {}
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+components: {}

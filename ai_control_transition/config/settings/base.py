@@ -1,0 +1,173 @@
+# config/settings/base.py | AI-Control SDD v0.6.0 | 27-09-2026 20:00(GMT-04:00)
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+from dotenv import load_dotenv
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-default')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['*']
+
+INSTALLED_APPS = [
+    'daphne',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.postgres',
+    
+    # Third party
+    'pgvector',
+    'django_crypto_fields',
+    'drf_spectacular',
+    'django_extensions',
+    
+    # Local
+    'core',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'config.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB', 'ai-control'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'password'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+    }
+}
+# Override via DATABASE_URL no local.py / production.py se necessário
+if 'DATABASE_URL' in os.environ:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(default=os.environ['DATABASE_URL'])
+
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+]
+
+LANGUAGE_CODE = 'pt-br'
+TIME_ZONE = 'America/Cuiaba'
+USE_I18N = True
+USE_TZ = True
+
+STATIC_URL = 'static/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Celery Configuration
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    'checkpoint-sessions-every-15-min': {
+        'task': 'core.tasks.checkpoint.checkpoint_sessions',
+        'schedule': crontab(minute='*/15'),
+    },
+}
+# Channels (Daphne/WebSockets)
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                {
+                    "address": os.environ.get('WHATS_GT_CHANNELS_REDIS_URL', 'redis://localhost:6379/1'),
+                    "socket_timeout": None,
+                    "socket_keepalive": True,
+                    "health_check_interval": 180,
+                }
+            ],
+        },
+    },
+}
+
+# WhatsApp Gateway SaaS
+WHATS_GT_API_URL = os.environ.get('WHATS_GT_API_URL', 'http://localhost:8081')
+WHATS_GT_API_KEY = os.environ.get('WHATS_GT_API_KEY', '')
+WHATS_GT_WEBHOOK_BASE_URL = os.environ.get('WHATS_GT_WEBHOOK_BASE_URL', 'http://localhost:8000')
+
+# Crypto Fields
+DJANGO_CRYPTO_FIELDS_KEY_PATH = os.environ.get('CRYPTO_KEY_PATH', os.path.join(BASE_DIR, 'crypto_keys/'))
+AUTO_CREATE_KEYS = True
+DJANGO_REVISION_IGNORE_WORKING_DIR = False
+DJANGO_REVISION_REVISION = '1.0.0'
+APP_NAME = 'config'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'core': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
