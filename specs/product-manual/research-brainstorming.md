@@ -18,6 +18,15 @@
 5. **Profundidade Técnica dos Exemplos Didáticos (RAG/WhatsApp)**
    - **Decisão:** **Profundidade Técnica Máxima.** O manual de engenharia não esconderá a complexidade atrás do ORM do Django. Os exemplos didáticos irão expor consultas nativas SQL, lógicas do `pgvector`, Signals e os detalhes cruciais de como o RBAC 4-Tier e as Organizações blindam o sistema em nível de disco.
 
+6. **Formato do Sumário Executivo**
+   - **Decisão:** **Híbrido (Capabilities & Business Value).** O sumário atenderá a múltiplos públicos, conectando as decisões arquiteturais (como RAG Seguro e RBAC Matricial) ao ROI, segurança corporativa, e descrevendo de forma clara as capacidades de IA entregues.
+
+7. **Profundidade das Explicações Socráticas**
+   - **Decisão:** **Cenários de Desafio (Post-Mortem Roleplay).** As explicações usarão cenários reais (ex: falhas de Tenant Bleed ou problemas de escalabilidade com Django Groups) que forcem o leitor a compreender criticamente as decisões de design arquitetural, atingindo a máxima profundidade didática.
+
+8. **Hospedagem e Acessibilidade do Conteúdo Confidencial**
+   - **Decisão:** **Markdown no Repositório (Acesso via Git).** A fim de manter o foco no MVP e o controle rigoroso sobre a confidencialidade das estratégias de engenharia e regras de negócio, todo o material executivo e socrático será consumido inicialmente via código-fonte (Git).
+
 ## 📚 Rastro de Pesquisa (Padrões da Indústria para Cultura de Falhas)
 
 A busca na web confirmou as melhores práticas para documentar falhas arquiteturais, transformando dívida e erro em cultura de engenharia:

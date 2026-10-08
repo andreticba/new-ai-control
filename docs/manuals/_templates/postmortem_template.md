@@ -23,7 +23,7 @@
 [O que decidimos fazer para corrigir ou evoluir a arquitetura?]
 
 ## Links ADR / Código
-- [ADR-XXX: Título](../adr-map.md)
+- [ADR-XXX: Título](../03-history/adr-map.md)
 - [Evidência no código/commit]
 
 ## Lacunas de Evidência
