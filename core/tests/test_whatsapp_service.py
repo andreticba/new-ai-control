@@ -1,7 +1,8 @@
 # test_whatsapp_service.py | AI-Control SDD v0.6.0 | 03-10-2026 00:15(GMT-04:00)
 from django.test import TestCase
 from unittest.mock import patch
-from core.models import Organization, Contact, ContactPhoneNumber, Conversation, Message
+from core.models import Organization
+from omnichannel.models import Contact, ContactPhoneNumber, Conversation, Message
 from core.services.whatsapp_service import WhatsAppService
 
 class WhatsAppServiceTests(TestCase):

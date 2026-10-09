@@ -3,7 +3,8 @@ import logging
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.core.cache import cache
-from core.models import AuditLog, ContactPhoneNumber, Organization, Conversation, Message, Contact
+from core.models import AuditLog, Organization
+from omnichannel.models import ContactPhoneNumber, Conversation, Message, Contact
 from core.adapters.evolution import EvolutionWebhookAdapter
 from core.tasks.whatsapp_tasks import AIIngestionDelegator, send_typing_signal
 
@@ -49,7 +50,7 @@ class WhatsAppService:
                     
                 conv, _ = Conversation.objects.get_or_create(
                     contact=cpn.contact, 
-                    organization=org,
+                    organization_id=org.id,
                     defaults={"status": Conversation.Status.ACTIVE_AI}
                 )
                 

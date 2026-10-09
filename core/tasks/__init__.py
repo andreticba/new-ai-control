@@ -3,7 +3,8 @@ import logging
 import requests
 import os
 from celery import shared_task
-from core.models import Message, DocumentChunk
+from core.models import DocumentChunk
+from omnichannel.models import Message
 
 logger = logging.getLogger(__name__)
 

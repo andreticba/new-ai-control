@@ -1,6 +1,7 @@
 # core/services/conversation_service.py | AI-Control SDD v0.6.0 | 29-09-2026 15:18(GMT-04:00)
 
-from core.models import Conversation, AuditLog
+from core.models import AuditLog
+from omnichannel.models import Conversation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 import logging

@@ -59,11 +59,11 @@
 **Independent Test**: Migrações passam do zero e injetam `INTERNAL_USERS_DATA` no banco com sucesso.
 **Referência**: FR-001, FR-002, FR-008
 
-- [ ] T011 [US1] FAZER BACKUP: Copiar a lógica da função `create_internal_data` e `INTERNAL_USERS_DATA` e a cláusula `RunPython` que existem no final de `core/migrations/0001_initial.py` para um arquivo de texto temporário seguro.
-- [ ] T012 [US1] Deletar fisicamente as pastas antigas de migrações ou limpar arquivos não essenciais de `core/migrations/` e `omnichannel/migrations/` (deletar os `.py`, mantendo `__init__.py`).
-- [ ] T013 [US1] Rodar comando `python manage.py makemigrations core omnichannel` para gerar a migração definitiva Greenfield (`0001_initial.py`).
-- [ ] T014 [US1] RESTAURAR BACKUP: Injetar a lógica e o `RunPython` do seed copiados anteriormente no final da array `operations` do novo `core/migrations/0001_initial.py`.
-- [ ] T015 [US1] Realizar o Reset ou Migrate inicial (via `python manage.py migrate`) testando a idempotência.
+- [x] T011 [US1] FAZER BACKUP: Copiar a lógica da função `create_internal_data` e `INTERNAL_USERS_DATA` e a cláusula `RunPython` que existem no final de `core/migrations/0001_initial.py` para um arquivo de texto temporário seguro.
+- [x] T012 [US1] Deletar fisicamente as pastas antigas de migrações ou limpar arquivos não essenciais de `core/migrations/` e `omnichannel/migrations/` (deletar os `.py`, mantendo `__init__.py`).
+- [x] T013 [US1] Rodar comando `python manage.py makemigrations core omnichannel` para gerar a migração definitiva Greenfield (`0001_initial.py`).
+- [x] T014 [US1] RESTAURAR BACKUP: Injetar a lógica e o `RunPython` do seed copiados anteriormente no final da array `operations` do novo `core/migrations/0001_initial.py`.
+- [x] T015 [US1] Realizar o Reset ou Migrate inicial (via `python manage.py migrate`) testando a idempotência.
 
 ---
 
@@ -73,7 +73,7 @@
 **Independent Test**: Instância Celery sobe apontada no DB especificado pelo env.
 **Referência**: FR-007
 
-- [ ] T016 [P] [US3] Atualizar `config/settings/base.py` ou `config/celery.py` (conforme padrão do projeto) para ler a variável `CELERY_OMNICHANNEL_REDIS_URL` para gerenciar a fila isolada.
+- [x] T016 [P] [US3] Atualizar `config/settings/base.py` ou `config/celery.py` (conforme padrão do projeto) para ler a variável `CELERY_OMNICHANNEL_REDIS_URL` para gerenciar a fila isolada.
 
 ---
 

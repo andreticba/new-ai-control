@@ -7,8 +7,6 @@ from .models import (
     UserProfile, ParticipantProfile, ProfessionalProfile, OnboardingProcess,
     ConsentLog, DataAccessGrant, AuditLog,
     Document, DocumentChunk,
-    Contact, ContactPhoneNumber, ContactOrganizationMembership,
-    Conversation, Message,
 )
 
 
@@ -143,10 +141,4 @@ admin.site.register(Document)
 admin.site.register(DocumentChunk)
 
 
-# --- CRM ---
 
-admin.site.register(Contact)
-admin.site.register(ContactPhoneNumber)
-admin.site.register(ContactOrganizationMembership)
-admin.site.register(Conversation)
-admin.site.register(Message)

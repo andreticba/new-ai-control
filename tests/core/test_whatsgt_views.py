@@ -3,7 +3,8 @@ import pytest
 import json
 from unittest.mock import patch
 from django.contrib.auth.models import User
-from core.models import Organization, Contact, Conversation, Message, AuditLog
+from core.models import Organization, AuditLog, ConsentLog
+from omnichannel.models import Contact, ContactPhoneNumber, ContactOrganizationMembership, Conversation, Message
 
 @pytest.fixture
 def org_1():

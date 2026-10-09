@@ -2,7 +2,8 @@
 
 import hashlib
 from typing import Tuple, Optional
-from core.models import Organization, Contact, ContactPhoneNumber, ContactOrganizationMembership
+from core.models import Organization
+from omnichannel.models import Contact, ContactPhoneNumber, ContactOrganizationMembership
 from core.utils import generate_phone_hash
 
 class ContactService:

@@ -3,7 +3,8 @@
 import pytest
 from core.adapters.evolution import EvolutionWebhookAdapter
 from core.services.contact_service import ContactService
-from core.models import Organization, Contact, ContactPhoneNumber, ContactOrganizationMembership
+from core.models import Organization, AuditLog, ConsentLog
+from omnichannel.models import Contact, ContactPhoneNumber, ContactOrganizationMembership, Conversation, Message
 from core.utils import generate_phone_hash
 
 @pytest.fixture

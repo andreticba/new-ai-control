@@ -6,7 +6,8 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.cache import cache
-from core.models import Message, AuditLog
+from core.models import AuditLog
+from omnichannel.models import Message
 from core.services.evolution_gateway import EvolutionGatewayService
 
 logger = logging.getLogger(__name__)

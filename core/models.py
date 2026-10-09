@@ -728,7 +728,7 @@ class AuditLog(models.Model):
     action = models.CharField(max_length=50, choices=ActionType.choices)
     
     # Recurso Afetado
-    target_contact = models.ForeignKey('Contact', on_delete=models.SET_NULL, null=True, blank=True)
+    target_contact_id = models.UUIDField(null=True, blank=True)
     target_content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
     target_object_id = models.CharField(max_length=255, null=True, blank=True)
     
