@@ -48,8 +48,8 @@
 **Independent Test**: Executar uma SQL crua de DELETE em `core_auditlog` e observar falha do PostgreSQL.
 **Referência**: FR-006
 
-- [ ] T009 [US2] Gerar migração vazia no core via `python manage.py makemigrations core --empty`.
-- [ ] T010 [US2] Editar a migração gerada em `core/migrations/` e injetar `migrations.RunSQL` com a trigger e function nativas bloqueando `UPDATE` e `DELETE` em `core_auditlog`, garantindo o código de reversão (DROP TRIGGER/DROP FUNCTION).
+- [X] T009 [US2] Gerar migração vazia no core via `python manage.py makemigrations core --empty`.
+- [X] T010 [US2] Editar a migração gerada em `core/migrations/` e injetar `migrations.RunSQL` com a trigger e function nativas bloqueando `UPDATE` e `DELETE` em `core_auditlog`, garantindo o código de reversão (DROP TRIGGER/DROP FUNCTION).
 
 ---
 
