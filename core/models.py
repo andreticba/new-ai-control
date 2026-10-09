@@ -117,6 +117,15 @@ class Organization(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['is_internal'], 
+                condition=Q(is_internal=True), 
+                name='unique_internal_organization'
+            )
+        ]
+
     def __str__(self):
         return f"{self.name} ({self.get_org_type_display()})"
 
@@ -734,6 +743,13 @@ class AuditLog(models.Model):
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
 
+    class Meta:
+        indexes = [
+            GinIndex(fields=['details'], name='auditlog_details_gin'),
+            GinIndex(fields=['ai_reasoning_snapshot'], name='auditlog_ai_reasoning_gin'),
+        ]
+
+
     def __str__(self):
         return f"Audit: {self.action} by {self.actor} at {self.timestamp}"
 
@@ -823,137 +839,4 @@ class DocumentChunk(models.Model):
 
 # --- 5. CRM Multi-Tenant e Evolution API ---
 
-class Contact(models.Model):
-    class Status(models.TextChoices):
-        PLATFORM_LEAD = 'PLATFORM_LEAD', _('Lead da Plataforma')
-        CUSTOMER_LEAD = 'CUSTOMER_LEAD', _('Lead de Cliente')
-        PROSPECT = 'PROSPECT', _('Prospect')
-        CLIENT = 'CLIENT', _('Cliente')
-        ARCHIVED = 'ARCHIVED', _('Arquivado')
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    full_name = EncryptedTextField(null=True, blank=True)
-    search_tokens = ArrayField(models.CharField(max_length=32), blank=True, default=list)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PLATFORM_LEAD)
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        indexes = [GinIndex(fields=['search_tokens'], name='contact_name_blind_idx')]
-
-    def save(self, *args, **kwargs):
-        if self.full_name:
-            try:
-                from .utils import generate_search_tokens
-                self.search_tokens = generate_search_tokens(self.full_name)
-            except Exception:
-                pass
-        else:
-            self.search_tokens = []
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return str(self.id)
-
-
-class ContactPhoneNumber(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name='phone_numbers')
-    
-    # Ex: 5511999999999@s.whatsapp.net
-    whatsapp_jid = models.CharField(max_length=255, unique=True)
-    
-    # Blind index para buscas exatas
-    phone_number = EncryptedCharField(max_length=50, null=True, blank=True)
-    phone_hash = models.CharField(max_length=64, db_index=True, blank=True)
-
-    description = models.CharField(max_length=100, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        if self.phone_number:
-            try:
-                from .utils import generate_phone_hash
-                self.phone_hash = generate_phone_hash(self.phone_number)
-            except Exception:
-                pass
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.whatsapp_jid
-
-
-class ContactOrganizationMembership(models.Model):
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name='memberships')
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='contacts_membership')
-    validated_email = EncryptedCharField(max_length=214, null=True, blank=True)
-    notes = EncryptedTextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        unique_together = ('contact', 'organization')
-
-
-class Conversation(models.Model):
-    class Status(models.TextChoices):
-        ACTIVE_AI = 'ACTIVE_AI', _('Ativo (IA)')
-        ACTIVE_HUMAN = 'ACTIVE_HUMAN', _('Ativo (Humano)')
-        CLOSED = 'CLOSED', _('Fechado')
-
-    class AccessLevel(models.TextChoices):
-        PUBLIC = 'PUBLIC', _('Público')
-        SUPERVISOR_ONLY = 'SUPERVISOR_ONLY', _('Apenas Supervisor')
-        MUTED = 'MUTED', _('Silenciado')
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    contact = models.ForeignKey(Contact, on_delete=models.PROTECT, related_name='conversations')
-    organization = models.ForeignKey(Organization, on_delete=models.PROTECT, related_name='conversations')
-    
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE_AI)
-    access_level = models.CharField(max_length=20, choices=AccessLevel.choices, default=AccessLevel.PUBLIC)
-    
-    assigned_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='conversations')
-    last_message_timestamp = models.DateTimeField(default=timezone.now)
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.contact} - {self.status}"
-
-
-class Message(models.Model):
-    class Direction(models.TextChoices):
-        INBOUND = 'INBOUND', _('Inbound')
-        OUTBOUND = 'OUTBOUND', _('Outbound')
-
-    class VisibilityLevel(models.TextChoices):
-        PUBLIC = 'PUBLIC', _('Público')
-        INTERNAL_TEAM = 'INTERNAL_TEAM', _('Equipe Interna')
-        ARCHIVED = 'ARCHIVED', _('Arquivado')
-
-    class Sentiment(models.TextChoices):
-        NEUTRAL = 'NEUTRAL', _('Neutro')
-        POSITIVE = 'POSITIVE', _('Positivo')
-        URGENT = 'URGENT', _('Urgente')
-        FRUSTRATED = 'FRUSTRATED', _('Frustrado')
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
-    
-    sender_whatsapp = models.CharField(max_length=255)
-    direction = models.CharField(max_length=20, choices=Direction.choices, default=Direction.INBOUND)
-    content = models.TextField()
-    
-    sent_by_ai = models.BooleanField(default=False)
-    visibility_level = models.CharField(max_length=20, choices=VisibilityLevel.choices, default=VisibilityLevel.PUBLIC)
-    sentiment = models.CharField(max_length=20, choices=Sentiment.choices, default=Sentiment.NEUTRAL)
-    
-    timestamp = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"[{self.direction}] {self.sender_whatsapp}"
