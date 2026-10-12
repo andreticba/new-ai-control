@@ -1,4 +1,4 @@
-# requirements.txt | AI-Control SDD v0.6.0 | 27-09-2026 20:00(GMT-04:00)
+# requirements.txt | AI-Control v0.0.1 | 12-10-2026 09:19(GMT-04:00)
 
 Django==6.1.*
 daphne==4.2.3
@@ -19,4 +19,7 @@ requests
 channels>=4,<5
 channels-redis>=4,<5
 drf-spectacular==0.30.0
+djangorestframework~=3.18.3
+djangorestframework-simplejwt~=5.3.1
+django-cors-headers~=4.3.1
 django-extensions==4.1

@@ -1,0 +1,36 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "api:generate": "npx openapi-typescript http://localhost:8000/api/schema/ -o src/lib/api-schema.d.ts || npx openapi-typescript openapi-schema.yaml -o src/lib/api-schema.d.ts"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.11.0",
+    "@tanstack/react-query": "^5.90.12",
+    "axios": "^1.13.2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.555.0",
+    "next": "^16.1.7",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-redux": "^9.2.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "openapi-typescript": "^7.10.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

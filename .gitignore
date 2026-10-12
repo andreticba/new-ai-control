@@ -9,6 +9,8 @@
 .docs/*
 /logs
 /node_modules
+**/node_modules/
+**/.next/
 kit-legado/*
 # Variáveis de Ambiente e Segredos
 .env
@@ -24,6 +26,12 @@ __pycache__/
 .coverage
 htmlcov/
 /instance
+
+# Frontend
+frontend/node_modules
+frontend/.next/
+frontend/openapi-schema.yaml
+frontend/src/lib/api-schema.d.ts
 
 # Ignorar relatórios de análise estática de código
 /reports
@@ -45,6 +53,8 @@ vitalia-01/*
 whatsapp-gateway/*
 agente-local/*
 ai-control-transition/*
+new-ai-control/*
+new-ai-control/
 temp.md
 
 # Conversa com IA

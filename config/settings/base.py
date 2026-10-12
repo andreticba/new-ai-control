@@ -1,5 +1,6 @@
-# config/settings/base.py | AI-Control SDD v0.6.0 | 27-09-2026 20:00(GMT-04:00)
+# config/settings/base.py | AI-Control v0.0.1 | 12-10-2026 09:19(GMT-04:00)
 import os
+from datetime import timedelta
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -22,6 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     
     # Third party
+    'rest_framework',
+    'corsheaders',
     'pgvector',
     'django_crypto_fields',
     'drf_spectacular',
@@ -35,11 +38,19 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# Políticas de CORS
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -181,8 +192,47 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+# Configuração condicional de segurança OpenAPI (OWASP API9:2023)
+if DEBUG:
+    SPECTACULAR_SETTINGS = {
+        'TITLE': 'AI-Control API',
+        'DESCRIPTION': 'Documentação da API e Endpoints do AI-Control',
+        'VERSION': '1.0.0',
+        'SERVE_INCLUDE_SCHEMA': False,
+        'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    }
+else:
+    SPECTACULAR_SETTINGS = {
+        'TITLE': 'AI-Control API',
+        'DESCRIPTION': 'Documentação da API e Endpoints do AI-Control (Produção)',
+        'VERSION': '1.0.0',
+        'SERVE_INCLUDE_SCHEMA': False,
+        'SERVE_PERMISSIONS': ['rest_framework.permissions.IsAdminUser'],
+        'SECURITY': [{'BearerAuth': []}],
+        'APPEND_COMPONENTS': {
+            'securitySchemes': {
+                'BearerAuth': {
+                    'type': 'http',
+                    'scheme': 'bearer',
+                    'bearerFormat': 'JWT',
+                }
+            }
+        },
+    }
 
 # Usuário de serviço do bot (usado na migration de seed e no orquestrador)
 BOT_USER_USERNAME = os.environ.get('BOT_USER_USERNAME', 'ai-bot')

@@ -1,5 +1,5 @@
-# urls.py | AI-Control SDD v0.6.0 | 03-10-2026 00:15(GMT-04:00)
-from django.urls import path, re_path
+# urls.py | AI-Control v0.0.1 | 12-10-2026 09:35(GMT-04:00)
+from django.urls import path, re_path, include
 from .views.debug_views import whatsgt_debug_view
 from .views.whatsgt_views import (
     WhatsGtInstanceQrView,
@@ -10,10 +10,13 @@ from .views.whatsgt_views import (
 from .api.v1.views.webhook_whatsapp import WebhookGatewayView
 
 urlpatterns = [
+    # Rotas v1 agregadas (Auth JWT, Users/Me, Workspaces)
+    path('api/v1/', include('core.api.v1.urls')),
+
     # Template View — renderiza a interface de debug no Django Admin
     path('admin/core/debug/qr/', whatsgt_debug_view, name='whatsgt_debug_view'),
 
-    # API endpoints
+    # API endpoints legados
     path('api/v1/whats-gt/qr/', WhatsGtInstanceQrView.as_view(), name='whatsgt_instance_qr'),
     path('api/v1/whats-gt/instance/', WhatsGtInstanceDeleteView.as_view(), name='whatsgt_instance_delete'),
     path('api/v1/whats-gt/messages/', WhatsGtMessagesListView.as_view(), name='whatsgt_message_list'),
