@@ -1,6 +1,7 @@
 // frontend/src/lib/api.ts | AI-Control v0.0.1 | 12-10-2026 09:55(GMT-04:00)
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { toast } from 'sonner';
 import { store } from '@/store';
 import { logout, setCredentials, STORAGE_KEYS } from '@/store/authSlice';
 
@@ -128,6 +129,12 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
+      }
+    }
+
+    if (error.response?.status === 403) {
+      if (typeof window !== 'undefined') {
+        toast.error('Acesso Negado (403): Você não possui permissão para executar esta ação no AI-Control.');
       }
     }
 

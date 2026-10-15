@@ -33,7 +33,7 @@ services:
 
   # Motor de Inferência Ollama (GTX 1060 Optimized)
   ollama:
-    image: ollama/ollama:0.5.12
+    image: ollama/ollama:latest
     container_name: ${OLLAMA_CONTAINER_NAME:-ai-control_ollama}
     volumes:
       - ollama_data:/root/.ollama
