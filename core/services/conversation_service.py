@@ -25,14 +25,14 @@ class ConversationService:
             pass
             
         conversation.status = Conversation.Status.ACTIVE_HUMAN
-        conversation.assigned_user = user
-        conversation.save(update_fields=['status', 'assigned_user', 'updated_at'])
+        conversation.assigned_user_id = user.id if user else None
+        conversation.save(update_fields=['status', 'assigned_user_id', 'updated_at'])
         
         # Registrar o evento na Auditoria
         AuditLog.objects.create(
             actor=user,
             action=AuditLog.ActionType.HANDOFF_ASSUMED,
-            target_contact=conversation.contact,
+            target_contact_id=conversation.contact_id if conversation.contact_id else None,
             target_content_type=ContentType.objects.get_for_model(Conversation),
             target_object_id=str(conversation.id),
             details={"previous_status": "ACTIVE_AI"}
@@ -52,14 +52,14 @@ class ConversationService:
             raise ValueError("Conversation not found")
             
         conversation.status = Conversation.Status.ACTIVE_AI
-        conversation.assigned_user = None
-        conversation.save(update_fields=['status', 'assigned_user', 'updated_at'])
+        conversation.assigned_user_id = None
+        conversation.save(update_fields=['status', 'assigned_user_id', 'updated_at'])
         
         # Registrar o evento
         AuditLog.objects.create(
             actor=user,
             action=AuditLog.ActionType.UPDATE,
-            target_contact=conversation.contact,
+            target_contact_id=conversation.contact_id if conversation.contact_id else None,
             target_content_type=ContentType.objects.get_for_model(Conversation),
             target_object_id=str(conversation.id),
             details={"event": "returned_to_ai"}

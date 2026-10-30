@@ -139,7 +139,7 @@ class WhatsGtMessagesListView(View):
 
         if org:
             messages = Message.objects.filter(
-                conversation__organization=org
+                conversation__organization_id=org.id
             ).order_by('-timestamp')[:50]
         else:
             messages = Message.objects.order_by('-timestamp')[:50]

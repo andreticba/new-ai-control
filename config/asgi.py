@@ -22,7 +22,7 @@ django_asgi_app = get_asgi_application()
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-import core.routing
+import config.routing
 
 application = ProtocolTypeRouter({
     # HTTP continua sendo servido pelo Django normalmente.
@@ -32,7 +32,7 @@ application = ProtocolTypeRouter({
     # do cookie de sessão do Django (o admin já está logado via HTTP).
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            core.routing.websocket_urlpatterns
+            config.routing.websocket_urlpatterns
         )
     ),
 })

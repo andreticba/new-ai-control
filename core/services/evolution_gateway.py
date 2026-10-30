@@ -110,7 +110,9 @@ class EvolutionGatewayService:
         try:
             response = requests.get(url, headers=headers, timeout=self.timeout)
             if response.status_code == 200:
-                return response.json().get("instance", {}).get("state", "unknown")
+                return response.json().get("instance", {}).get("state", "close")
+            elif response.status_code == 404:
+                return "close"
         except requests.RequestException:
             pass
         return "unknown"
@@ -130,7 +132,31 @@ class EvolutionGatewayService:
         except requests.RequestException:
             return False
 
-    def send_text_message(self, instance_name, jid, text):
+    def logout_instance(self, instance_name, actor=None):
+        url = f"{self.api_url}/instance/logout/{instance_name}"
+        headers = {"apikey": self.api_key}
+        try:
+            response = requests.delete(url, headers=headers, timeout=self.timeout)
+            # 200/204 ou erro informando que já está fechado/desconectado
+            err_text = response.text.lower() if response.text else ""
+            if (
+                response.status_code in (200, 204)
+                or (
+                    response.status_code in (400, 404, 500)
+                    and any(term in err_text for term in ("connection closed", "not connected", "not found", "already closed", "unauthorized"))
+                )
+            ):
+                AuditLog.objects.create(
+                    action=AuditLog.ActionType.WHATSAPP_DISCONNECTED,
+                    actor=actor,
+                    details={"instance_name": instance_name}
+                )
+                return True
+        except requests.RequestException:
+            pass
+        return False
+
+    def send_text_message(self, instance_name, jid, text, quoted=None):
         url = f"{self.api_url}/message/sendText/{instance_name}"
         headers = {"apikey": self.api_key}
         payload = {
@@ -141,6 +167,10 @@ class EvolutionGatewayService:
             },
             "text": text
         }
+        if quoted:
+            payload["options"]["quoted"] = quoted
+            payload["quoted"] = quoted
+
         try:
             response = requests.post(url, json=payload, headers=headers, timeout=self.timeout)
             response.raise_for_status()

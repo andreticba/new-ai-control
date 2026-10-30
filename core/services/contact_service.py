@@ -50,7 +50,7 @@ class ContactService:
         # Garante a associação (Membership) do Lead com a Organização (Tenant)
         ContactOrganizationMembership.objects.get_or_create(
             contact=contact,
-            organization=org
+            organization_id=org.id
         )
         
         return contact, org

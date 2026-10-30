@@ -1,0 +1,123 @@
+<!-- tasks.md | Vitalia SDD v0.6.0 | 20-10-2026 23:38:00(GMT-04:00) -->
+> **tasks.md | Vitalia SDD v0.6.0 | 20-10-2026 23:38:00(GMT-04:00)**
+
+# Tasks: 006-omnichannel-decoupling
+
+**Spec**: [specs/006-omnichannel-decoupling/spec.md](file:///home/andre/projetos/assistidos/ai-control/specs/006-omnichannel-decoupling/spec.md) | **Plan**: [specs/006-omnichannel-decoupling/plan.md](file:///home/andre/projetos/assistidos/ai-control/specs/006-omnichannel-decoupling/plan.md)  
+**Gerado em**: 20-10-2026 23:38(GMT-04:00)
+
+---
+
+## MVP Scope
+
+> O MVP desta refatoração é composto pelas **Phases 0 a 4 (Frontend Desacoplado)** e **Phases 5 a 6 (Backend Service Layer & P15/P17)**, garantindo que o módulo Omnichannel funcione com alta coesão e zero regressão nos 29 testes existentes.
+
+---
+
+## Phase 0: Grounding & Environment
+
+- [ ] T000-A Ativar ambiente virtual: `. .venv/bin/activate`
+- [ ] T000-B Verificar interpretador Python 3.14 do venv: `.venv/bin/python --version`
+- [ ] T000-C Validar estado saudável do frontend Next.js: `cd frontend && npm run type-check`
+- [ ] T000-D Validar suíte ativa de testes do backend antes das alterações: `.venv/bin/pytest omnichannel/tests` (29 passed)
+
+---
+
+## Phase 1: Setup
+
+- [ ] T001 Criar estrutura de diretórios para serializers segregados: `mkdir -p omnichannel/api/serializers`
+- [ ] T002 Criar estrutura de diretórios para serviços de domínio: `mkdir -p omnichannel/services`
+
+---
+
+## Phase 2: Foundational
+
+- [ ] T003 [P] Criar arquivo base `omnichannel/services/__init__.py` com exportação pública dos futuros services
+- [ ] T004 [P] Validar contratos de tipagem em `specs/006-omnichannel-decoupling/contracts/decoupling_contracts.md`
+
+---
+
+## Phase 3: User Story 1 — Frontend Hooks (Isolamento de Estado)
+
+**Story Goal**: Extrair a lógica matemática de drag de mouse e o ciclo de vida da instância WhatsApp para custom hooks reutilizáveis.  
+**Independent Test**: Executar `npm run type-check` no frontend e verificar que os hooks compilam sem erros de tipagem.  
+**Referência**: FR-001, FR-002
+
+- [ ] T005 [P] [US1] Implementar hook de redimensionamento `frontend/src/hooks/use-column-resize.ts` com suporte a `direction: 'left' | 'right'`, bloqueio de seleção no DOM e persistência em `localStorage`
+- [ ] T006 [P] [US1] Implementar hook de ciclo de vida WhatsApp `frontend/src/hooks/use-whatsapp-instance.ts` encapsulando requisições REST da instância, estados de conexão e toasts Sonner
+- [ ] T007 [US1] Validar compilação estática dos novos hooks via `npm run type-check` em `frontend/`
+
+---
+
+## Phase 4: User Story 2 — Frontend Compound Components & Decomposição de `page.tsx`
+
+**Story Goal**: Decompor o monolito visual de `page.tsx` em componentes atômicos puros e reduzir `page.tsx` para < 80 linhas.  
+**Independent Test**: Executar `npm run type-check` e `npm run build` no frontend com sucesso de empacotamento Turbopack.  
+**Referência**: FR-003
+
+- [ ] T008 [P] [US2] Implementar componente de dock lateral `frontend/src/components/omnichannel/nav-rail.tsx` com navegação, indicador de status do WhatsApp e avatar do operador
+- [ ] T009 [P] [US2] Implementar componente de barra superior `frontend/src/components/omnichannel/omnichannel-header.tsx` com indicador WebSocket e atalho rápido
+- [ ] T010 [P] [US2] Implementar componente de divisória interativa `frontend/src/components/omnichannel/column-splitter.tsx` com estilos para os temas `cyan` e `emerald`
+- [ ] T011 [US2] Refatorar `frontend/src/components/omnichannel/whatsapp-modal.tsx` para consumir o hook `useWhatsAppInstance`, removendo chamadas diretas de `api`
+- [ ] T012 [US2] Desmontar o monolito de `frontend/src/app/omnichannel/page.tsx`, integrando os novos componentes e hooks para torná-lo um orquestrador conciso (< 80 linhas)
+- [ ] T013 [US2] Validar build de produção do frontend com Turbopack: `npm run build` em `frontend/`
+
+---
+
+## Phase 5: User Story 3 — Backend Serializers & Eliminação de N+1 (P15 & P17)
+
+**Story Goal**: Segregar serializers em leitura vs. escrita e eliminar consultas N+1 na listagem de conversas.  
+**Independent Test**: Executar `.venv/bin/pytest omnichannel/tests` e constatar que todos os 29 testes passam com retrocompatibilidade garantida.  
+**Referência**: FR-007, FR-008
+
+- [ ] T014 [P] [US3] Criar `omnichannel/api/serializers/read.py` com `ConversationReadSerializer`, `MessageReadSerializer`, `ContactReadSerializer` e `CopilotDraftReadSerializer`, eliminando a query oculta no `get_last_message`
+- [ ] T015 [P] [US3] Criar `omnichannel/api/serializers/write.py` com serializers estritos de validação (`MessageCreateSerializer`, `TakeoverActionSerializer`, `InstanceActionSerializer`)
+- [ ] T016 [US3] Criar `omnichannel/api/serializers/__init__.py` exportando aliases canônicos para retrocompatibilidade com suítes de teste existentes
+- [ ] T017 [US3] Executar suíte de testes do backend para certificar que nenhum import foi quebrado: `.venv/bin/pytest omnichannel/tests`
+
+---
+
+## Phase 6: User Story 4 — Backend Service Layer & Enxugamento de Views
+
+**Story Goal**: Extrair regras de negócio da Evolution API, transbordo e despacho de mensagens para classes de serviço de domínio.  
+**Independent Test**: Executar `.venv/bin/pytest omnichannel/tests` (29 passed) e validar endpoints via curl/Postman.  
+**Referência**: FR-004, FR-005, FR-006
+
+- [ ] T018 [P] [US4] Implementar `omnichannel/services/instance_service.py` com métodos `get_status`, `generate_qr` e `disconnect`
+- [ ] T019 [P] [US4] Implementar `omnichannel/services/takeover_service.py` com métodos `assign_to_human`, `return_to_ai` e `mark_as_read` utilizando transações atômicas `select_for_update`
+- [ ] T020 [P] [US4] Implementar `omnichannel/services/message_dispatch_service.py` com `send_operator_message` desacoplando o envio outbound da Evolution API
+- [ ] T021 [US4] Atualizar `omnichannel/services/__init__.py` exportando `InstanceService`, `TakeoverService` e `MessageDispatchService`
+- [ ] T022 [US4] Refatorar `omnichannel/api/views.py`, reduzindo os métodos das views para delegações diretas à Service Layer com serializers P17
+- [ ] T023 [US4] Executar suíte completa de testes do backend: `.venv/bin/pytest omnichannel/tests`
+
+---
+
+## Phase 7: Polish & Cross-Cutting
+
+- [ ] T024 Validar o fluxo end-to-end com servidores ativos (frontend e backend)
+- [ ] T025 Confirmar que a métrica de concisão de `page.tsx` (< 80 linhas) e das views (< 35 linhas/método) foi atendida integralmente
+- [ ] T026 Garantir conformidade com os carimbos de cabeçalho GMT-04:00 (Princípio P04) em todos os novos arquivos criados
+
+---
+
+## Dependency Graph
+
+```mermaid
+flowchart TD
+    P0["Phase 0: Grounding & Env"] --> P1["Phase 1: Setup"]
+    P1 --> P2["Phase 2: Foundational"]
+    
+    P2 --> P3["Phase 3: US1 (Frontend Hooks)"]
+    P3 --> P4["Phase 4: US2 (Frontend Components & page.tsx)"]
+    
+    P2 --> P5["Phase 5: US3 (Backend Serializers P15 & P17)"]
+    P5 --> P6["Phase 6: US4 (Backend Service Layer & Views)"]
+    
+    P4 --> P7["Phase 7: Polish & Cross-Cutting"]
+    P6 --> P7
+```
+
+## Parallel Execution
+
+- As tarefas marcadas com `[P]` dentro de cada fase não possuem dependência mútua e podem ser desenvolvidas em paralelo.
+- A **Phase 3 (Frontend)** e a **Phase 5 (Backend)** podem ser iniciadas simultaneamente após a conclusão da Phase 2.

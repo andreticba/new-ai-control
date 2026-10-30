@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
     # Rotas de Aplicação
+    path('api/v1/omnichannel/', include('omnichannel.api.urls')),
     path('', include('core.urls')),
     path('admin/', admin.site.urls),
 ]

@@ -43,7 +43,7 @@ class TestEvolutionGatewayService:
         assert create_call[1]["json"]["qrcode"] is True
         
         assert webhook_call[0][0] == "http://fake-api/webhook/set/ai_control_test_org"
-        assert webhook_call[1]["json"]["webhook"]["url"] == "http://fake-webhook/api/v1/webhook/whatsapp/?org=test_org"
+        assert webhook_call[1]["json"]["webhook"]["url"] == "http://fake-webhook/api/v1/webhook/whatsapp"
         
         assert result == {"status": "created"}
 
@@ -112,9 +112,7 @@ class TestEvolutionGatewayService:
                     "delay": 1200,
                     "presence": "composing"
                 },
-                "textMessage": {
-                    "text": "hello"
-                }
+                "text": "hello"
             },
             headers={"apikey": "fake-key"},
             timeout=5

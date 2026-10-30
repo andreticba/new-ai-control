@@ -1,4 +1,4 @@
-# core/middleware.py | Atualizado em: 06-10-2026 21:43:00(GMT-04:00)
+# core/middleware/rbac.py | AI-Control SDD v0.6.0
 from django.http import HttpResponseForbidden
 from core.models import AuditLog
 

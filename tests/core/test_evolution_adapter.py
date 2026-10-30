@@ -69,7 +69,7 @@ def test_contact_service_creates_contact_and_membership():
     assert phone_obj.phone_hash == generate_phone_hash(sender_phone)
     
     # Valida Membership
-    assert ContactOrganizationMembership.objects.filter(contact=contact, organization=org).exists()
+    assert ContactOrganizationMembership.objects.filter(contact=contact, organization_id=org.id).exists()
 
 @pytest.mark.django_db
 def test_contact_service_finds_existing_contact_by_hash():
