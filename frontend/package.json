@@ -1,12 +1,12 @@
 {
   "name": "frontend",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "tsc --noEmit",
     "type-check": "tsc --noEmit",
     "api:generate": "npx openapi-typescript http://localhost:8000/api/schema/ -o src/lib/api-schema.d.ts || npx openapi-typescript openapi-schema.yaml -o src/lib/api-schema.d.ts"
   },

@@ -60,6 +60,10 @@ Durante a sessão socrática de brainstorming, todos os gargalos e inconsistênc
       * **Alerta na Barra de Tarefas / Aba:** O título da aba alterna dinamicamente para `(N) Nova mensagem - AI-Control` e dispara notificação do sistema via Web Notification API (`new Notification(...)`).
       * Ao retornar o foco para a janela (`focus` / `visibilitychange`): o título original é restaurado, inicia o delay perceptivo de 1.5s na conversa aberta e zera o contador via `markReadMutation`.
 
+11. **🟢 HIGIENE DE TESTES & NEXT.JS 16 — Unificação da Suíte Global e Correção do Script Lint:**
+    - Remoção do arquivo de teste obsoleto `omnichannel/tests.py` que conflitava com o pacote `omnichannel/tests/`, restaurando a execução atômica de toda a base de testes via `pytest` (130 testes aprovados com 100% de sucesso).
+    - Adequação do script `lint` no `frontend/package.json` para `tsc --noEmit`, alinhando à remoção do comando `next lint` no Next.js 16.
+
 ---
 
 ## 2. Rastro de Pesquisa e Grounding (Princípio P03)
